@@ -61,6 +61,7 @@
         android:id="@+id/button_plusOrMinus"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:onClick="onClickNeg"
         android:text="@string/pom"
         app:layout_constraintBottom_toTopOf="@+id/BottomMargin"
         app:layout_constraintEnd_toStartOf="@+id/button_0"

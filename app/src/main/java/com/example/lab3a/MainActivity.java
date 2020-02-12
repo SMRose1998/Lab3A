@@ -97,6 +97,27 @@ public class MainActivity extends AppCompatActivity {
         updatePreviousInputText(input);
     }
 
+    public void onClickNeg(View v){
+
+        //Checks if the result is displayed
+        if(nextClickClear) {
+            resultAsCurrentInput();
+        }
+
+        //Check if number is an int to avoid annoying decimals
+        if (currentInput.contains(".")){
+            float current = Float.valueOf(currentInput);
+            current*= -1;
+            currentInput = String.valueOf(current);
+        }else{
+            int current = Integer.valueOf(currentInput);
+            current*= -1;
+            currentInput = String.valueOf(current);
+        }
+        updateMainInput();
+        //Make it so that the code goes back and deletes the same number of chars (minus one for the sub sign) as the current input
+    }
+
 
 
     public void onClickAdd(View v) {
@@ -119,9 +140,8 @@ public class MainActivity extends AppCompatActivity {
         //Checks that there is some number to operate on
         //Otherwise, operate on the previous result
         if(nextClickClear) {
-            String inpt = viewMain.getText().toString();
-            currentInput = inpt;
-            previousInputString += inpt;
+            resultAsCurrentInput();
+            previousInputString += currentInput;
         }
 
         //Add the clicked operator to the list
@@ -131,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
         switchInputs();
     }
 
+    private void resultAsCurrentInput(){
+        String inpt = viewMain.getText().toString();
+        currentInput = inpt;
+    }
     public void onClickEquals(View v) {
         previousInputs.add(currentInput);
         previousInputString+=" =";
@@ -215,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updatePreviousInputText(String number){
+
         previousInputString+= number;
         viewPrevious.setText(previousInputString);
     }
