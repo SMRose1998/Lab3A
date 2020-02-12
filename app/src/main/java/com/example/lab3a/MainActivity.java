@@ -11,8 +11,28 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.*;
+
+import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
+
+    String currentInput= "";
+    ArrayList<String> previousInputs;
+    ArrayList<Operator> operators;
+
+    //Main View for current input and output
+    TextView viewMain;
+
+    private enum Operator{
+        add("add"),
+        sub("subtract"),
+        mult("multiply"),
+        div("divide");
+
+        String str;
+        Operator(String msg){ str = msg;}
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        previousInputs = new ArrayList<String>();
+        operators = new ArrayList<Operator>();
+
+        viewMain = findViewById(R.id.text_main);
+
+
+
 
     }
 
@@ -43,5 +71,54 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClickValue(View v){
+        Button self = (Button) v;
+        String input = self.getText().toString();
+        currentInput += input;
+        updateMainInput();
+    }
+
+    public void onClickAdd(View v){
+        operators.add(Operator.add);
+        switchInputs();
+    }
+
+    public void onClickSub(View v){
+        operators.add(Operator.sub);
+        switchInputs();
+    }
+
+    public void onClickMult(View v){
+        operators.add(Operator.mult);
+        switchInputs();
+    }
+
+    public void onClickDiv(View v){
+        operators.add(Operator.div);
+        switchInputs();
+    }
+
+    public void onClickEquals(View v){
+        switchInputs();
+        Iterator<Operator> itterateOp = operators.iterator();
+        Iterator<String> itterateInputs = previousInputs.iterator();
+
+
+
+        //PEMDAS
+        while(itterateOp.hasNext()){
+
+        }
+    }
+
+    private void switchInputs(){
+        previousInputs.add(currentInput);
+        currentInput = "";
+    }
+
+    private void updateMainInput(){
+        viewMain.setText(currentInput);
     }
 }
