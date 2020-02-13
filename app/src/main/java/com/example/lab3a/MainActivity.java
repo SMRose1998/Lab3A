@@ -97,11 +97,41 @@ public class MainActivity extends AppCompatActivity {
         updatePreviousInputText(input);
     }
 
+    public void onClickSqrt(View v){
+        if(nextClickClear) {
+            resultAsCurrentInput();
+        }
+
+        //Calculate the Sqrt
+        BigDecimal root = new BigDecimal(currentInput);
+        root = root.pow(1/2);
+
+        //Put the full value of the number into
+        previousInputs.add(root.toString().substring(0,10));
+
+        updatePreviousInputText("√"+currentInput);
+        currentInput="";
+        updateMainInput();
+
+    }
+
     public void onClickNeg(View v){
+
+        // Makes sure there is a number to make negative
+        // If empty, then return
+        if(currentInput.equals("")){
+            return;
+        }
 
         //Checks if the result is displayed
         if(nextClickClear) {
             resultAsCurrentInput();
+        }else{
+            // Make it so that the code goes back and deletes the same number of chars (minus one for the sub sign) as the current input
+            // Update the Substring to show the minus sign
+            previousInputString = previousInputString.substring(
+                    0, previousInputString.length()-currentInput.length()
+            );
         }
 
         //Check if number is an int to avoid annoying decimals
@@ -115,7 +145,9 @@ public class MainActivity extends AppCompatActivity {
             currentInput = String.valueOf(current);
         }
         updateMainInput();
-        //Make it so that the code goes back and deletes the same number of chars (minus one for the sub sign) as the current input
+
+
+        updatePreviousInputText(currentInput);
     }
 
 
@@ -168,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         if(!divideByZero) {
             result = previousInputs.get(0);
         }else{
-            result = "ERROR: Cannot Divide By Zero";
+            result = "ERROR: Divided By Zero";
         }
 
         viewMain.setText(result);
@@ -200,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     result = firstNumber.multiply(secondNumber);
                     break;
                 case div:
-                    if(secondNumber==BigDecimal.ZERO){
+                    if(secondNumber.equals(BigDecimal.ZERO)){
                         divideByZero = true;
                     }else {
                         result = firstNumber.divide(secondNumber);
@@ -240,7 +272,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void updatePreviousInputText(String number){
 
-        previousInputString+= number;
+        //Check for negative sign and subtraction
+        //If subtracting by a negative add in parentheses for clarity
+        if(Double.valueOf(number)<0 &&
+           operators.size()>0 &&
+           operators.get(operators.size()-1).equals(Operator.sub)){
+            previousInputString+= "("+number+")";
+        }else{
+            previousInputString+= number;
+        }
         viewPrevious.setText(previousInputString);
     }
 
