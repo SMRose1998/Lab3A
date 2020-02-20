@@ -129,7 +129,7 @@
         android:layout_marginTop="32dp"
         android:onClick="onClickClear"
         android:text="@string/c"
-        app:layout_constraintBottom_toTopOf="@+id/button_percent"
+        app:layout_constraintBottom_toTopOf="@+id/button_mod"
         app:layout_constraintEnd_toStartOf="@+id/RightMargin"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_sqrt"
@@ -206,7 +206,7 @@
         app:layout_constraintEnd_toStartOf="@+id/RightMargin"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_mult"
-        app:layout_constraintTop_toBottomOf="@+id/button_percent" />
+        app:layout_constraintTop_toBottomOf="@+id/button_mod" />
 
     <Button
         android:id="@+id/button_9"
@@ -240,7 +240,7 @@
         android:onClick="onClickDiv"
         android:text="@string/div"
         app:layout_constraintBottom_toTopOf="@+id/button_mult"
-        app:layout_constraintEnd_toStartOf="@+id/button_percent"
+        app:layout_constraintEnd_toStartOf="@+id/button_mod"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_6"
         app:layout_constraintTop_toBottomOf="@+id/button_sqrt" />
@@ -270,10 +270,11 @@
         app:layout_constraintTop_toBottomOf="@+id/text_previous" />
 
     <Button
-        android:id="@+id/button_percent"
+        android:id="@+id/button_mod"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="@string/prcent"
+        android:onClick="onClickMod"
+        android:text="@string/mod"
         app:layout_constraintBottom_toTopOf="@+id/button_sub"
         app:layout_constraintEnd_toStartOf="@+id/RightMargin"
         app:layout_constraintHorizontal_bias="0.5"

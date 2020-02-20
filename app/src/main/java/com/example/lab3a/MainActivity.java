@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         add("+"),
         sub("-"),
         mult("x"),
-        div("/");
+        div("/"),
+        mod("%");
 
         String string;
 
@@ -105,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickSqrt(View v){
+        //Check for negative
+        if(currentInput.contains("-")){
+            clearView();
+            reset();
+            viewMain.setText("ERROR: Negative Square Root");
+            return;
+        }
+
         if(nextClickClear) {
             resultAsCurrentInput();
         }
@@ -112,9 +121,17 @@ public class MainActivity extends AppCompatActivity {
         //Calculate the Sqrt
         String root = String.valueOf(Math.sqrt(Double.valueOf(currentInput)));
 
-        //Cut down sqrt to 5 decimal places
-        if(root.length()>7){
-            root = root.substring(0,7);
+
+        if(root.contains(".")) {
+            //Cut down sqrt to 5 decimal places
+            if (root.substring(root.indexOf("."),root.length()).length() > 5) {
+                root = root.substring(0, root.indexOf(".")+6);
+            }
+
+            //Cut off extra 0 tacked on to the end of int result
+            if (root.substring(root.indexOf("."),root.length()).equals(".0")){
+                root = root.substring(0,root.length()-2);
+            }
         }
 
         //Update input String
@@ -135,6 +152,36 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    /*public void onClickModOLD(View v){
+        if(nextClickClear) {
+            resultAsCurrentInput();
+        }
+
+        //Devisor
+        String n = previousInputs.get(previousInputs.size()-1);
+
+        //Calculte the mod
+        BigDecimal firstNumber = new BigDecimal(n);
+        BigDecimal secondNumber = new BigDecimal(currentInput);
+        String result = firstNumber.remainder(secondNumber).toString();
+
+        //Set the previous input string
+        previousInputString.substring(0,previousInputString.length()-n.length());
+        previousInputString+=result;
+
+        //Remove the last number from previous inputs
+        previousInputs.remove(previousInputs.size()-1);
+
+        //put in the new last input
+        previousInputs.add(result);
+
+        //Update previous string view
+        currentInput = "";
+        viewPrevious.setText(previousInputString);
+        viewMain.setText("");
+
+    }*/
 
     public void onClickNeg(View v){
 
@@ -189,7 +236,17 @@ public class MainActivity extends AppCompatActivity {
         onOperatorClick(Operator.div);
     }
 
+    public void onClickMod(View v){
+        onOperatorClick(Operator.mod);
+    }
+
     private void onOperatorClick(Operator op){
+
+        // Checks that some input has been entered
+        if(currentInput.equals("") && !nextClickClear){
+            return;
+        }
+
         //Checks that there is some number to operate on
         //Otherwise, operate on the previous result
         if(nextClickClear) {
@@ -209,11 +266,21 @@ public class MainActivity extends AppCompatActivity {
         currentInput = inpt;
     }
     public void onClickEquals(View v) {
+
+        if(currentInput.equals("")){
+            return;
+        }
+
+        if(nextClickClear){
+            return;
+        }
+
         addToPreviousInputs(currentInput);
         previousInputString+=" =";
 
         operate(Operator.mult);
         operate(Operator.div);
+        operate(Operator.mod);
         operate(Operator.add);
         operate(Operator.sub);
 
@@ -264,6 +331,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case add:
                     result = firstNumber.add(secondNumber);
+                    break;
+                case mod:
+                    result = firstNumber.remainder(secondNumber);
                     break;
 
             }
