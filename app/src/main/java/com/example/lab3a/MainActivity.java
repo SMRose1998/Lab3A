@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.*;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Initialize
         reset();
 
+        // Get the main outputs
         viewMain = findViewById(R.id.text_main);
         viewPrevious = findViewById(R.id.text_previous);
 
@@ -88,13 +91,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickValue(View v) {
-        if(nextClickClear)
-            clearView();
-        Button self = (Button) v;
-        String input = self.getText().toString();
-        currentInput += input;
-        updateMainInput();
-        updatePreviousInputText(input);
+
+        // Limit number of digits to 10
+        if(currentInput.length()<10) {
+            if (nextClickClear)
+                clearView();
+            Button self = (Button) v;
+            String input = self.getText().toString();
+            currentInput += input;
+            updateMainInput();
+            updatePreviousInputText(input);
+        }
     }
 
     public void onClickSqrt(View v){
@@ -103,15 +110,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Calculate the Sqrt
-        BigDecimal root = new BigDecimal(currentInput);
-        root = root.pow(1/2);
+        String root = String.valueOf(Math.sqrt(Double.valueOf(currentInput)));
 
-        //Put the full value of the number into
-        previousInputs.add(root.toString().substring(0,10));
+        //Cut down sqrt to 5 decimal places
+        if(root.length()>7){
+            root = root.substring(0,7);
+        }
 
-        updatePreviousInputText("√"+currentInput);
-        currentInput="";
-        updateMainInput();
+        //Update input String
+        previousInputString = previousInputString.substring(
+                0, previousInputString.length()-currentInput.length());
+
+        //Add sqrt number
+        previousInputString+="√"+currentInput;
+
+        //Set the previous input and clear the current input
+        previousInputs.add(root);
+        currentInput = "";
+
+
+        //Update previous string view
+        viewPrevious.setText(previousInputString);
+        viewMain.setText("");
+
 
     }
 
@@ -188,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         currentInput = inpt;
     }
     public void onClickEquals(View v) {
-        previousInputs.add(currentInput);
+        addToPreviousInputs(currentInput);
         previousInputString+=" =";
 
         operate(Operator.mult);
@@ -221,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
             //Get index of operator
             int index = operators.indexOf(operator);
 
-            //Get the firt and second numbers
+            //Get the first and second numbers
             BigDecimal firstNumber = new BigDecimal(previousInputs.get(index));
             BigDecimal secondNumber = new BigDecimal(previousInputs.get(index+1));
 
@@ -263,21 +284,29 @@ public class MainActivity extends AppCompatActivity {
         previousInputString += " "+operators.get(operators.size() - 1).string + " ";
 
         //Set the previous input and clear the current input
-        previousInputs.add(currentInput);
+        addToPreviousInputs(currentInput);
         currentInput = "";
 
         //Update previous string view
         viewPrevious.setText(previousInputString);
     }
 
+    private void addToPreviousInputs(String input){
+        if(!currentInput.equals("")){
+            previousInputs.add(currentInput);
+        }
+    }
+
     private void updatePreviousInputText(String number){
 
         //Check for negative sign and subtraction
         //If subtracting by a negative add in parentheses for clarity
-        if(Double.valueOf(number)<0 &&
+        if(!number.contains(".") &&
+           !number.contains("√")  &&
+           Double.valueOf(number)<0 &&
            operators.size()>0 &&
            operators.get(operators.size()-1).equals(Operator.sub)){
-            previousInputString+= "("+number+")";
+                    previousInputString+= "("+number+")";
         }else{
             previousInputString+= number;
         }
