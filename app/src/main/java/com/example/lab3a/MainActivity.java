@@ -15,6 +15,7 @@ import android.widget.*;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -106,16 +107,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickSqrt(View v){
+
+        if(nextClickClear) {
+            //resultAsCurrentInput();
+            return;
+        }
+
         //Check for negative
         if(currentInput.contains("-")){
             clearView();
             reset();
             viewMain.setText("ERROR: Negative Square Root");
             return;
-        }
-
-        if(nextClickClear) {
-            resultAsCurrentInput();
         }
 
         //Calculate the Sqrt
@@ -267,7 +270,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onClickEquals(View v) {
 
-        if(currentInput.equals("")){
+        // Prevent null operation
+        if(currentInput.equals("") && operators.size()>0){
             return;
         }
 
@@ -323,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                     if(secondNumber.equals(BigDecimal.ZERO)){
                         divideByZero = true;
                     }else {
-                        result = firstNumber.divide(secondNumber);
+                        result = firstNumber.divide(secondNumber, 5, RoundingMode.HALF_UP);
                     }
                     break;
                 case sub:
