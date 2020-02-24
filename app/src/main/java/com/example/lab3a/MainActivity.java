@@ -95,11 +95,15 @@ public class MainActivity extends AppCompatActivity {
     public void onClickValue(View v) {
 
         // Limit number of digits to 10
-        if(currentInput.length()<10) {
+        if(currentInput.length()<10 ||
+          (currentInput.contains(".") && currentInput.length()<11)) {
             if (nextClickClear)
                 clearView();
             Button self = (Button) v;
             String input = self.getText().toString();
+            if(input.equals(".")&&currentInput.contains(".")){
+                return;
+            }
             currentInput += input;
             updateMainInput();
             updatePreviousInputText(input);
