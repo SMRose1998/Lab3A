@@ -130,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(root.contains(".")) {
-            //Cut down sqrt to 5 decimal places
-            if (root.substring(root.indexOf("."),root.length()).length() > 5) {
-                root = root.substring(0, root.indexOf(".")+6);
+            //Cut down sqrt to 10 decimal places
+            if (root.substring(root.indexOf("."),root.length()).length() > 10) {
+                root = root.substring(0, root.indexOf(".")+11);
             }
 
             //Cut off extra 0 tacked on to the end of int result
@@ -160,35 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*public void onClickModOLD(View v){
-        if(nextClickClear) {
-            resultAsCurrentInput();
-        }
-
-        //Devisor
-        String n = previousInputs.get(previousInputs.size()-1);
-
-        //Calculte the mod
-        BigDecimal firstNumber = new BigDecimal(n);
-        BigDecimal secondNumber = new BigDecimal(currentInput);
-        String result = firstNumber.remainder(secondNumber).toString();
-
-        //Set the previous input string
-        previousInputString.substring(0,previousInputString.length()-n.length());
-        previousInputString+=result;
-
-        //Remove the last number from previous inputs
-        previousInputs.remove(previousInputs.size()-1);
-
-        //put in the new last input
-        previousInputs.add(result);
-
-        //Update previous string view
-        currentInput = "";
-        viewPrevious.setText(previousInputString);
-        viewMain.setText("");
-
-    }*/
 
     public void onClickNeg(View v){
 
@@ -331,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                     if(secondNumber.equals(BigDecimal.ZERO)){
                         divideByZero = true;
                     }else {
-                        result = firstNumber.divide(secondNumber, 5, RoundingMode.HALF_UP);
+                        result = firstNumber.divide(secondNumber, 10, RoundingMode.HALF_UP).stripTrailingZeros();
                     }
                     break;
                 case sub:
